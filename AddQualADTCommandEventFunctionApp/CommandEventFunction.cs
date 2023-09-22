@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Azure.Identity;
 using Azure.DigitalTwins.Core;
+using AddQualADTCommandEventFunctionApp.Model;
 
 namespace AddQualADTCommandEventFunctionApp
 {
@@ -23,7 +24,19 @@ namespace AddQualADTCommandEventFunctionApp
 
             if (eventGridEvent != null && eventGridEvent.Data != null)
             {
-                log.LogInformation(eventGridEvent.Data.ToString());
+                RootObjectModel rootObjectModel = JsonConvert.DeserializeObject<RootObjectModel>(eventGridEvent.Data.ToString());
+                if (rootObjectModel.Data.ModelId.Equals("dtmi:com:AddQual:Factory:ScanBox:Cobot:URCobot;1"))
+                {
+                    log.LogInformation("Execute URCobot");
+                }
+                else if (rootObjectModel.Data.ModelId.Equals("dtmi:com:AddQual:Factory:ScanBox:Cobot:URGripper;1"))
+                {
+                    log.LogInformation("Execute URGripper");
+                }
+                else
+                {
+                    log.LogInformation(eventGridEvent.Data.ToString());
+                }
                 //JObject jObject = JsonConvert.DeserializeObject<JObject>(eventGridEvent.Data.ToString());
                 //log.LogInformation(jObject["dataschema"].ToString());
 
