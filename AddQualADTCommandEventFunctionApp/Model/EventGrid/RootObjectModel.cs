@@ -1,4 +1,4 @@
-﻿namespace AddQualADTCommandEventFunctionApp.Model
+﻿namespace AddQualADTCommandEventFunctionApp.Model.EventGrid
 {
     public class RootObjectModel
     {
