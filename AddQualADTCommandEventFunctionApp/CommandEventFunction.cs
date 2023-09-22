@@ -12,12 +12,15 @@ using AddQualADTCommandEventFunctionApp.Model.EventGrid;
 using Azure;
 using System.Threading.Tasks;
 using AddQualADTCommandEventFunctionApp.Model.DigitalTwins;
+using Microsoft.Azure.Devices;
+using Microsoft.Azure.Amqp.Framing;
 
 namespace AddQualADTCommandEventFunctionApp
 {
     public static class CommandEventFunction
     {
         private static readonly string ADT_SERVICE_URL = Environment.GetEnvironmentVariable("ADT_SERVICE_URL");
+        private static readonly string IOT_HUB_SERVICE_URL = Environment.GetEnvironmentVariable("IOT_HUB_SERVICE_URL");
         [FunctionName("CommandEventFunction")]
         public static async Task RunAsync([EventGridTrigger]EventGridEvent eventGridEvent, ILogger log)
         {
@@ -46,6 +49,13 @@ namespace AddQualADTCommandEventFunctionApp
                     URGripperModel urGripperModel = URGripperModel.Get(urGripperBasicDigitalTwin);
                     if (urGripperModel.IsInvoked)
                     {
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod;
+                        if (urGripperModel.IsActive is false) cloudToDeviceMethod = new CloudToDeviceMethod("ActivateGripperCommand");
+                        if (urGripperModel.IsOpen) cloudToDeviceMethod = new CloudToDeviceMethod("OpenGripperCommand");
+                        else cloudToDeviceMethod = new CloudToDeviceMethod("CloseGripperCommand");
+                        cloudToDeviceMethod.ResponseTimeout = TimeSpan.FromSeconds(10);
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URGripper", cloudToDeviceMethod);
                         log.LogInformation("UR GRIPPER EXECUTED");
                     }
                     else
