@@ -23,8 +23,9 @@ namespace AddQualADTCommandEventFunctionApp
 
             if (eventGridEvent != null && eventGridEvent.Data != null)
             {
-                JObject jObject = JsonConvert.DeserializeObject<JObject>(eventGridEvent.Data.ToString());
-                log.LogInformation(jObject["dataschema"].ToString());
+                log.LogInformation(eventGridEvent.Data.ToString());
+                //JObject jObject = JsonConvert.DeserializeObject<JObject>(eventGridEvent.Data.ToString());
+                //log.LogInformation(jObject["dataschema"].ToString());
 
                 //if (jObject["dataschema"].ToString().Equals("dtmi:com:AddQual:Factory:ScanBox:Cobot:URCobot;1"))
                 //{
