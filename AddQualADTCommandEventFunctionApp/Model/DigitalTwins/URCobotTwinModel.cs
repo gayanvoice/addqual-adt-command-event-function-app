@@ -12,7 +12,8 @@ namespace AddQualADTCommandEventFunctionApp.Model.DigitalTwins
             URCobotTwinModel urCobotTwinModel = new URCobotTwinModel();
             foreach (string property in basicDigitalTwin.Contents.Keys)
             {
-                if (basicDigitalTwin.Contents.TryGetValue(property, out object? value))
+                if (basicDigitalTwin.Contents.TryGetValue(property, out object value))
+                {
                     if (value is not null)
                     {
                         if (property.Equals("JointPosition"))
@@ -20,10 +21,20 @@ namespace AddQualADTCommandEventFunctionApp.Model.DigitalTwins
                             JointPositionModel? jointPositionModel = JsonConvert.DeserializeObject<JointPositionModel>(value.ToString());
                             if (jointPositionModel != null) urCobotTwinModel.JointPosition = jointPositionModel;
                         }
-                        if (property.Equals("IsInvoked")) urCobotTwinModel.IsInvoked = true;
-                        else urCobotTwinModel.IsInvoked = false;
-
+                        if (property.Equals("IsInvoked"))
+                        {
+                            if (value is not null)
+                            {
+                                string? stringValue = value.ToString();
+                                if (stringValue is not null)
+                                {
+                                    bool booleanValue = bool.Parse(stringValue);
+                                    if (property.Equals("IsInvoked")) urCobotTwinModel.IsInvoked = booleanValue;
+                                }
+                            }
+                        }
                     }
+                }
             }
             return urCobotTwinModel;
         }

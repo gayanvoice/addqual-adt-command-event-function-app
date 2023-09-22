@@ -12,16 +12,21 @@ namespace AddQualADTCommandEventFunctionApp.Model.DigitalTwins
             URGripperModel urGripperModel = new URGripperModel();
             foreach (string property in basicDigitalTwin.Contents.Keys)
             {
-                if (basicDigitalTwin.Contents.TryGetValue(property, out object? value))
+                if (basicDigitalTwin.Contents.TryGetValue(property, out object value))
+                {
                     if (value is not null)
                     {
-                        if(property.Equals("IsActive")) urGripperModel.IsActive = true; 
-                        else urGripperModel.IsActive = false;
-                        if(property.Equals("IsInvoked")) urGripperModel.IsInvoked = true; 
-                        else urGripperModel.IsInvoked = false;
-                        if (property.Equals("IsOpen")) urGripperModel.IsOpen = true;
-                        else urGripperModel.IsOpen = false;
+                        string? stringValue = value.ToString();
+                        if (stringValue is not null)
+                        {
+                            bool booleanValue = bool.Parse(stringValue);
+                            if (property.Equals("IsActive")) urGripperModel.IsActive = booleanValue;
+                            if (property.Equals("IsInvoked")) urGripperModel.IsInvoked = booleanValue;
+                            if (property.Equals("IsOpen")) urGripperModel.IsOpen = booleanValue;
+
+                        }
                     }
+                }
             }
             return urGripperModel;
         }
