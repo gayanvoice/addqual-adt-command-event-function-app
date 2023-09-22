@@ -4,7 +4,6 @@ namespace AddQualADTCommandEventFunctionApp.Model.DigitalTwins
 {
     public class URGripperModel
     {
-        public bool IsActive{ get; set; }
         public bool IsInvoked{ get; set; }
         public bool IsOpen{ get; set; }
         public static URGripperModel Get(BasicDigitalTwin basicDigitalTwin)
@@ -20,7 +19,6 @@ namespace AddQualADTCommandEventFunctionApp.Model.DigitalTwins
                         if (stringValue is not null)
                         {
                             bool booleanValue = bool.Parse(stringValue);
-                            if (property.Equals("IsActive")) urGripperModel.IsActive = booleanValue;
                             if (property.Equals("IsInvoked")) urGripperModel.IsInvoked = booleanValue;
                             if (property.Equals("IsOpen")) urGripperModel.IsOpen = booleanValue;
 
