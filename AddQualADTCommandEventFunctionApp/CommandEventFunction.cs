@@ -51,7 +51,6 @@ namespace AddQualADTCommandEventFunctionApp
                     {
                         ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
                         CloudToDeviceMethod cloudToDeviceMethod;
-                        if (urGripperModel.IsActive is false) cloudToDeviceMethod = new CloudToDeviceMethod("ActivateGripperCommand");
                         if (urGripperModel.IsOpen) cloudToDeviceMethod = new CloudToDeviceMethod("OpenGripperCommand");
                         else cloudToDeviceMethod = new CloudToDeviceMethod("CloseGripperCommand");
                         cloudToDeviceMethod.ResponseTimeout = TimeSpan.FromSeconds(10);
