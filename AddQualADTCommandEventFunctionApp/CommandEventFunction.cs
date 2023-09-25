@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using AddQualADTCommandEventFunctionApp.Model.DigitalTwins;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Amqp.Framing;
+using AddQualADTCommandEventFunctionApp.Model.IoT;
+using System.Collections.Generic;
 
 namespace AddQualADTCommandEventFunctionApp
 {
@@ -33,20 +35,42 @@ namespace AddQualADTCommandEventFunctionApp
                 if (rootObjectModel.Data.ModelId.Equals("dtmi:com:AddQual:Factory:ScanBox:Cobot:URCobot;1"))
                 {
                     BasicDigitalTwin urCobotBasicDigitalTwin = await GetBasicDigitalTwinAsync(twinId: "URCobot", digitalTwinsClient: digitalTwinsClient);
-                    URCobotTwinModel urCobotModel = URCobotTwinModel.Get(urCobotBasicDigitalTwin);
-                    log.LogInformation("UR COBOT EXECUTED");
+                    URCobotTwinModel urCobotTwinModel = URCobotTwinModel.GetFromBasicDigitalTwin(urCobotBasicDigitalTwin);
+                    if (urCobotTwinModel.IsInvoked)
+                    {
+                        Model.IoT.JointPositionModel jointPositionModel = Model.IoT.JointPositionModel.Get(urCobotTwinModel.ActualQJointPosition);
+                        List<Model.IoT.JointPositionModel> digitalTwinsJointPositionModelList = new List<Model.IoT.JointPositionModel>
+                        {
+                            jointPositionModel
+                        };
+                        MoveJCommandModel moveJCommandModel = MoveJCommandModel.Get(digitalTwinsJointPositionModelList: digitalTwinsJointPositionModelList);
+                        log.LogInformation(JsonConvert.SerializeObject(moveJCommandModel));
+                        log.LogInformation("UR COBOT EXECUTED" + JsonConvert.SerializeObject(moveJCommandModel));
+                    }
+                    else
+                    {
+                        log.LogInformation("UR COBOT NOT EXECUTED");
+                    }
                 }
                 else if (rootObjectModel.Data.ModelId.Equals("dtmi:com:AddQual:Factory:ScanBox:Cobot:URGripper;1"))
                 {
                     BasicDigitalTwin urGripperBasicDigitalTwin = await GetBasicDigitalTwinAsync(twinId: "URGripper", digitalTwinsClient: digitalTwinsClient);
-                    URGripperTwinModel urGripperModel = URGripperTwinModel.Get(urGripperBasicDigitalTwin);
-                    ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
-                    CloudToDeviceMethod cloudToDeviceMethod;
-                    if (urGripperModel.IsOpen) cloudToDeviceMethod = new CloudToDeviceMethod("OpenGripperCommand");
-                    else cloudToDeviceMethod = new CloudToDeviceMethod("CloseGripperCommand");
-                    cloudToDeviceMethod.ResponseTimeout = TimeSpan.FromSeconds(10);
-                    CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URGripper", cloudToDeviceMethod);
-                    log.LogInformation("UR GRIPPER EXECUTED");
+                    URGripperTwinModel urGripperTwinModel = URGripperTwinModel.GetFromBasicDigitalTwin(urGripperBasicDigitalTwin);
+                    if (urGripperTwinModel.IsInvoked)
+                    {
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod;
+                        if (urGripperTwinModel.IsOpen) cloudToDeviceMethod = new CloudToDeviceMethod("OpenGripperCommand");
+                        else cloudToDeviceMethod = new CloudToDeviceMethod("CloseGripperCommand");
+                        cloudToDeviceMethod.ResponseTimeout = TimeSpan.FromSeconds(10);
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URGripper", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
+                        log.LogInformation("UR COBOT EXECUTED");
+                    }
+                    else
+                    {
+                        log.LogInformation("UR GRIPPER NOT EXECUTED");
+                    }
                 }
                 else
                 {

@@ -4,9 +4,9 @@ namespace AddQualADTCommandEventFunctionApp.Model.DigitalTwins
 {
     public class URGripperTwinModel
     {
-        public int Position { get; set; }
         public bool IsOpen { get; set; }
-        public static URGripperTwinModel Get(BasicDigitalTwin basicDigitalTwin)
+        public bool IsInvoked { get; set; }
+        public static URGripperTwinModel GetFromBasicDigitalTwin(BasicDigitalTwin basicDigitalTwin)
         {
             URGripperTwinModel urGripperTwinModel = new URGripperTwinModel();
             foreach (string property in basicDigitalTwin.Contents.Keys)
@@ -18,8 +18,9 @@ namespace AddQualADTCommandEventFunctionApp.Model.DigitalTwins
                         string stringValue = value.ToString();
                         if (stringValue is not null)
                         {
-                            if (property.Equals("Position")) urGripperTwinModel.Position = int.Parse(stringValue);
-                            if (property.Equals("IsOpen")) urGripperTwinModel.IsOpen = bool.Parse(stringValue);
+                            bool boolValue = bool.Parse(stringValue);
+                            if (property.Equals("IsInvoked")) urGripperTwinModel.IsInvoked = boolValue;
+                            if (property.Equals("IsOpen")) urGripperTwinModel.IsOpen = boolValue;
 
                         }
                     }
@@ -27,5 +28,4 @@ namespace AddQualADTCommandEventFunctionApp.Model.DigitalTwins
             }
             return urGripperTwinModel;
         }
-    }
 }
