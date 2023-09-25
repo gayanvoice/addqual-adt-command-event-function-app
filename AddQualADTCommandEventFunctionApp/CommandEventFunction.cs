@@ -45,7 +45,7 @@ namespace AddQualADTCommandEventFunctionApp
                         ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
                         CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("MoveJCommand");
                         cloudToDeviceMethod.SetPayloadJson(moveJCommandPayload);
-                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URGripper", cloudToDeviceMethod);
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
                         log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
                         log.LogInformation("UR COBOT EXECUTED" + JsonConvert.SerializeObject(moveJCommandModel));
                     }
