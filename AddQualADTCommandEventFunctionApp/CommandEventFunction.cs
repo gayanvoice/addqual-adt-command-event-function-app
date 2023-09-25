@@ -1,5 +1,3 @@
-// Default URL for triggering event grid function in the local environment.
-// http://localhost:7071/runtime/webhooks/EventGrid?functionName={functionname}
 using System;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.EventGrid;
@@ -13,7 +11,6 @@ using Azure;
 using System.Threading.Tasks;
 using AddQualADTCommandEventFunctionApp.Model.DigitalTwins;
 using Microsoft.Azure.Devices;
-using Microsoft.Azure.Amqp.Framing;
 using AddQualADTCommandEventFunctionApp.Model.IoT;
 using System.Collections.Generic;
 
@@ -44,7 +41,12 @@ namespace AddQualADTCommandEventFunctionApp
                             jointPositionModel
                         };
                         MoveJCommandModel moveJCommandModel = MoveJCommandModel.Get(digitalTwinsJointPositionModelList: digitalTwinsJointPositionModelList);
-                        log.LogInformation(JsonConvert.SerializeObject(moveJCommandModel));
+                        string moveJCommandPayload = JsonConvert.SerializeObject(moveJCommandModel);
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("MoveJCommand");
+                        cloudToDeviceMethod.SetPayloadJson(moveJCommandPayload);
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URGripper", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
                         log.LogInformation("UR COBOT EXECUTED" + JsonConvert.SerializeObject(moveJCommandModel));
                     }
                     else
@@ -65,7 +67,7 @@ namespace AddQualADTCommandEventFunctionApp
                         cloudToDeviceMethod.ResponseTimeout = TimeSpan.FromSeconds(10);
                         CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URGripper", cloudToDeviceMethod);
                         log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
-                        log.LogInformation("UR COBOT EXECUTED");
+                        log.LogInformation("UR GRIPPER EXECUTED");
                     }
                     else
                     {
