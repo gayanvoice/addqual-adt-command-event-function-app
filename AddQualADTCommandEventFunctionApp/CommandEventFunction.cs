@@ -34,33 +34,19 @@ namespace AddQualADTCommandEventFunctionApp
                 {
                     BasicDigitalTwin urCobotBasicDigitalTwin = await GetBasicDigitalTwinAsync(twinId: "URCobot", digitalTwinsClient: digitalTwinsClient);
                     URCobotTwinModel urCobotModel = URCobotTwinModel.Get(urCobotBasicDigitalTwin);
-                    if (urCobotModel.IsInvoked)
-                    {
-                        log.LogInformation("UR COBOT EXECUTED");
-                    }
-                    else
-                    {
-                        log.LogInformation("UR COBOT NOT EXECUTED");
-                    }
+                    log.LogInformation("UR COBOT EXECUTED");
                 }
                 else if (rootObjectModel.Data.ModelId.Equals("dtmi:com:AddQual:Factory:ScanBox:Cobot:URGripper;1"))
                 {
                     BasicDigitalTwin urGripperBasicDigitalTwin = await GetBasicDigitalTwinAsync(twinId: "URGripper", digitalTwinsClient: digitalTwinsClient);
-                    URGripperModel urGripperModel = URGripperModel.Get(urGripperBasicDigitalTwin);
-                    if (urGripperModel.IsInvoked)
-                    {
-                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
-                        CloudToDeviceMethod cloudToDeviceMethod;
-                        if (urGripperModel.IsOpen) cloudToDeviceMethod = new CloudToDeviceMethod("OpenGripperCommand");
-                        else cloudToDeviceMethod = new CloudToDeviceMethod("CloseGripperCommand");
-                        cloudToDeviceMethod.ResponseTimeout = TimeSpan.FromSeconds(10);
-                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URGripper", cloudToDeviceMethod);
-                        log.LogInformation("UR GRIPPER EXECUTED");
-                    }
-                    else
-                    {
-                        log.LogInformation("UR GRIPPER NOT EXECUTED");
-                    }
+                    URGripperTwinModel urGripperModel = URGripperTwinModel.Get(urGripperBasicDigitalTwin);
+                    ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                    CloudToDeviceMethod cloudToDeviceMethod;
+                    if (urGripperModel.IsOpen) cloudToDeviceMethod = new CloudToDeviceMethod("OpenGripperCommand");
+                    else cloudToDeviceMethod = new CloudToDeviceMethod("CloseGripperCommand");
+                    cloudToDeviceMethod.ResponseTimeout = TimeSpan.FromSeconds(10);
+                    CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URGripper", cloudToDeviceMethod);
+                    log.LogInformation("UR GRIPPER EXECUTED");
                 }
                 else
                 {

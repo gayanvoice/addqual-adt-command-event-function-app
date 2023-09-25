@@ -5,8 +5,8 @@ namespace AddQualADTCommandEventFunctionApp.Model.DigitalTwins
 {
     public class URCobotTwinModel
     {
-        public bool IsInvoked { get; set; }
-        public JointPositionModel? JointPosition { get; set; }
+        public bool IsMoving { get; set; }
+        public JointPositionModel? ActualQJointPosition { get; set; }
         public static URCobotTwinModel Get(BasicDigitalTwin basicDigitalTwin)
         {
             URCobotTwinModel urCobotTwinModel = new URCobotTwinModel();
@@ -16,12 +16,12 @@ namespace AddQualADTCommandEventFunctionApp.Model.DigitalTwins
                 {
                     if (value is not null)
                     {
-                        if (property.Equals("JointPosition"))
+                        if (property.Equals("ActualQJointPosition"))
                         {
-                            JointPositionModel? jointPositionModel = JsonConvert.DeserializeObject<JointPositionModel>(value.ToString());
-                            if (jointPositionModel != null) urCobotTwinModel.JointPosition = jointPositionModel;
+                            JointPositionModel actualQJointPositionModel = JsonConvert.DeserializeObject<JointPositionModel>(value.ToString());
+                            if (actualQJointPositionModel != null) urCobotTwinModel.ActualQJointPosition = actualQJointPositionModel;
                         }
-                        if (property.Equals("IsInvoked"))
+                        if (property.Equals("IsMoving"))
                         {
                             if (value is not null)
                             {
@@ -29,7 +29,7 @@ namespace AddQualADTCommandEventFunctionApp.Model.DigitalTwins
                                 if (stringValue is not null)
                                 {
                                     bool booleanValue = bool.Parse(stringValue);
-                                    if (property.Equals("IsInvoked")) urCobotTwinModel.IsInvoked = booleanValue;
+                                    if (property.Equals("IsMoving")) urCobotTwinModel.IsMoving = booleanValue;
                                 }
                             }
                         }
