@@ -28,4 +28,5 @@ namespace AddQualADTCommandEventFunctionApp.Model.DigitalTwins
             }
             return urGripperTwinModel;
         }
+    }
 }
