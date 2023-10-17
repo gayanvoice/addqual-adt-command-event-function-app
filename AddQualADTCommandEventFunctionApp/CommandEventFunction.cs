@@ -75,6 +75,111 @@ namespace AddQualADTCommandEventFunctionApp
                         log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
                         log.LogInformation("UR COBOT EXECUTED: MOVE J CONTROL" + JsonConvert.SerializeObject(moveJCommandModel));
                     }
+                    else if (urCobotTwinModel.ClosePopupControlModel.IsClosePopup)
+                    {
+                        var payload = new
+                        {
+                            Value = DateTime.Now.ToString(),
+                        };
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("ClosePopupCommand");
+                        cloudToDeviceMethod.SetPayloadJson(JsonConvert.SerializeObject(payload));
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
+                        log.LogInformation("UR COBOT EXECUTED: CLOSE POPUP CONTROL");
+                    }
+                    else if (urCobotTwinModel.OpenPopupControlModel.IsOpenPopup)
+                    {
+                        var payload = new
+                        {
+                            popup_text = urCobotTwinModel.OpenPopupControlModel.PopupText,
+                            Value = DateTime.Now.ToString(),
+                        };
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("OpenPopupCommand");
+                        cloudToDeviceMethod.SetPayloadJson(JsonConvert.SerializeObject(payload));
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
+                        log.LogInformation("UR COBOT EXECUTED: OPEN POPUP CONTROL");
+                    }
+                    else if (urCobotTwinModel.PlayControlModel.IsPlay)
+                    {
+                        var payload = new
+                        {
+                            Value = DateTime.Now.ToString(),
+                        };
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("PlayCommand");
+                        cloudToDeviceMethod.SetPayloadJson(JsonConvert.SerializeObject(payload));
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
+                        log.LogInformation("UR COBOT EXECUTED: PLAY CONTROL");
+                    }
+                    else if (urCobotTwinModel.PauseControlModel.IsPause)
+                    {
+                        var payload = new
+                        {
+                            Value = DateTime.Now.ToString(),
+                        };
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("PauseCommand");
+                        cloudToDeviceMethod.SetPayloadJson(JsonConvert.SerializeObject(payload));
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
+                        log.LogInformation("UR COBOT EXECUTED: PAUSE CONTROL");
+                    }
+                    else if (urCobotTwinModel.CloseSafetyPopupControlModel.IsCloseSafetyPopup)
+                    {
+                        var payload = new
+                        {
+                            Value = DateTime.Now.ToString(),
+                        };
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("CloseSafetyPopupCommand");
+                        cloudToDeviceMethod.SetPayloadJson(JsonConvert.SerializeObject(payload));
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
+                        log.LogInformation("UR COBOT EXECUTED: CLOSE SAFETY POPUP CONTROL");
+                    }
+                    else if (urCobotTwinModel.UnlockProtectiveStopControlModel.IsUnlockProtectiveStop)
+                    {
+                        var payload = new
+                        {
+                            Value = DateTime.Now.ToString(),
+                        };
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("UnlockProtectiveStopCommand");
+                        cloudToDeviceMethod.SetPayloadJson(JsonConvert.SerializeObject(payload));
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
+                        log.LogInformation("UR COBOT EXECUTED: UNLOCK PROTECTIVE STOP CONTROL");
+                    }
+                    else if (urCobotTwinModel.PowerOnControlModel.IsPowerOn)
+                    {
+                        var payload = new
+                        {
+                            Value = DateTime.Now.ToString(),
+                        };
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("PowerOnCommand");
+                        cloudToDeviceMethod.SetPayloadJson(JsonConvert.SerializeObject(payload));
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
+                        log.LogInformation("UR COBOT EXECUTED: UNLOCK PROTECTIVE STOP CONTROL");
+                    }
+                    else if (urCobotTwinModel.PowerOffControlModel.IsPowerOff)
+                    {
+                        var payload = new
+                        {
+                            Value = DateTime.Now.ToString(),
+                        };
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("PowerOffCommand");
+                        cloudToDeviceMethod.SetPayloadJson(JsonConvert.SerializeObject(payload));
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
+                        log.LogInformation("UR COBOT EXECUTED: UNLOCK PROTECTIVE STOP CONTROL");
+                    }
                 }
                 else
                 {
