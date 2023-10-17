@@ -35,16 +35,26 @@ namespace AddQualADTCommandEventFunctionApp
                     URCobotTwinModel urCobotTwinModel = URCobotTwinModel.GetFromBasicDigitalTwin(urCobotBasicDigitalTwin);
                     if (urCobotTwinModel.StartFreeDriveControlModel.IsStartFreeDrive)
                     {
+                        var payload = new
+                        {
+                            Value = DateTime.Now.ToString(),
+                        };
                         ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
                         CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("StartFreeDriveModeCommand");
+                        cloudToDeviceMethod.SetPayloadJson(JsonConvert.SerializeObject(payload));
                         CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
                         log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
                         log.LogInformation("UR COBOT EXECUTED: START FREE DRIVE CONTROL");
                     }
                     else if (urCobotTwinModel.StopFreeDriveControlModel.IsStopFreeDrive)
                     {
+                        var payload = new
+                        {
+                            Value = DateTime.Now.ToString(),
+                        };
                         ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
                         CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("StopFreeDriveModeCommand");
+                        cloudToDeviceMethod.SetPayloadJson(JsonConvert.SerializeObject(payload));
                         CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
                         log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
                         log.LogInformation("UR COBOT EXECUTED: STOP FREE DRIVE CONTROL");
@@ -64,10 +74,6 @@ namespace AddQualADTCommandEventFunctionApp
                         CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
                         log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
                         log.LogInformation("UR COBOT EXECUTED: MOVE J CONTROL" + JsonConvert.SerializeObject(moveJCommandModel));
-                    }
-                    else
-                    {
-                        log.LogInformation("UR COBOT NOT EXECUTED");
                     }
                 }
                 else
