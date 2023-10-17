@@ -32,9 +32,8 @@ namespace AddQualADTCommandEventFunctionApp
                 if (rootObjectModel.Data.ModelId.Equals("dtmi:com:AddQual:Factory:ScanBox:Cobot:URCobot;1"))
                 {
                     BasicDigitalTwin urCobotBasicDigitalTwin = await GetBasicDigitalTwinAsync(twinId: "URCobot", digitalTwinsClient: digitalTwinsClient);
-                    log.LogInformation(JsonConvert.SerializeObject(urCobotBasicDigitalTwin));
-
-                    //URCobotTwinModel urCobotTwinModel = URCobotTwinModel.GetFromBasicDigitalTwin(urCobotBasicDigitalTwin);
+                    URCobotTwinModel urCobotTwinModel = URCobotTwinModel.GetFromBasicDigitalTwin(urCobotBasicDigitalTwin);
+                    log.LogInformation(JsonConvert.SerializeObject(urCobotTwinModel));
                     //if (urCobotTwinModel.IsInvoked)
                     //{
                     //    Model.IoT.JointPositionModel jointPositionModel = Model.IoT.JointPositionModel.Get(urCobotTwinModel.ActualQJointPosition);
