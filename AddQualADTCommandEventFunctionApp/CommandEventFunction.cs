@@ -33,27 +33,42 @@ namespace AddQualADTCommandEventFunctionApp
                 {
                     BasicDigitalTwin urCobotBasicDigitalTwin = await GetBasicDigitalTwinAsync(twinId: "URCobot", digitalTwinsClient: digitalTwinsClient);
                     URCobotTwinModel urCobotTwinModel = URCobotTwinModel.GetFromBasicDigitalTwin(urCobotBasicDigitalTwin);
-                    log.LogInformation(JsonConvert.SerializeObject(urCobotTwinModel));
-                    //if (urCobotTwinModel.IsInvoked)
-                    //{
-                    //    Model.IoT.JointPositionModel jointPositionModel = Model.IoT.JointPositionModel.Get(urCobotTwinModel.ActualQJointPosition);
-                    //    List<Model.IoT.JointPositionModel> digitalTwinsJointPositionModelList = new List<Model.IoT.JointPositionModel>
-                    //    {
-                    //        jointPositionModel
-                    //    };
-                    //    MoveJCommandModel moveJCommandModel = MoveJCommandModel.Get(digitalTwinsJointPositionModelList: digitalTwinsJointPositionModelList);
-                    //    string moveJCommandPayload = JsonConvert.SerializeObject(moveJCommandModel);
-                    //    ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
-                    //    CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("MoveJCommand");
-                    //    cloudToDeviceMethod.SetPayloadJson(moveJCommandPayload);
-                    //    CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
-                    //    log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
-                    //    log.LogInformation("UR COBOT EXECUTED" + JsonConvert.SerializeObject(moveJCommandModel));
-                    //}
-                    //else
-                    //{
-                    //    log.LogInformation("UR COBOT NOT EXECUTED");
-                    //}
+                    if (urCobotTwinModel.StartFreeDriveControlModel.IsStartFreeDrive)
+                    {
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("StartFreeDriveModeCommand");
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
+                        log.LogInformation("UR COBOT EXECUTED: START FREE DRIVE CONTROL");
+                    }
+                    else if (urCobotTwinModel.StopFreeDriveControlModel.IsStopFreeDrive)
+                    {
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("StopFreeDriveModeCommand");
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
+                        log.LogInformation("UR COBOT EXECUTED: STOP FREE DRIVE CONTROL");
+                    }
+                    else if (urCobotTwinModel.MoveJControlModel.IsMoveJInvoked)
+                    {
+                        JointPositionModel jointPositionModel = JointPositionModel.Get(urCobotTwinModel.MoveJControlModel);
+                        List<JointPositionModel> digitalTwinsJointPositionModelList = new List<JointPositionModel>
+                        {
+                            jointPositionModel
+                        };
+                        MoveJCommandModel moveJCommandModel = MoveJCommandModel.Get(digitalTwinsJointPositionModelList: digitalTwinsJointPositionModelList);
+                        string moveJCommandPayload = JsonConvert.SerializeObject(moveJCommandModel);
+                        ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(IOT_HUB_SERVICE_URL);
+                        CloudToDeviceMethod cloudToDeviceMethod = new CloudToDeviceMethod("MoveJCommand");
+                        cloudToDeviceMethod.SetPayloadJson(moveJCommandPayload);
+                        CloudToDeviceMethodResult cloudToDeviceMethodResult = await serviceClient.InvokeDeviceMethodAsync("URCobot", cloudToDeviceMethod);
+                        log.LogInformation(JsonConvert.SerializeObject(cloudToDeviceMethodResult));
+                        log.LogInformation("UR COBOT EXECUTED: MOVE J CONTROL" + JsonConvert.SerializeObject(moveJCommandModel));
+                    }
+                    else
+                    {
+                        log.LogInformation("UR COBOT NOT EXECUTED");
+                    }
                 }
                 else
                 {
